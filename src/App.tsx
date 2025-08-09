@@ -5,32 +5,27 @@ import { setAuth } from "./api";
 import { ConfigProvider, theme as antdTheme } from "antd";
 
 function App() {
-    const [token, setToken] = useState<string | null>(localStorage.getItem("jwt") || null);
-    const [dark, setDark] = useState(false);
+  const [token, setToken] = React.useState<string | null>(localStorage.getItem("jwt"));
+  const [dark, setDark] = React.useState(false);
 
-    const onLogin = (tk: string) => {
-        setToken(tk);
-        setAuth(tk);
-        localStorage.setItem("jwt", tk);
-    };
+  const onLogin = (tk: string) => {
+    setToken(tk);
+    setAuth(tk); // chỉ lưu vào localStorage (interceptor sẽ tự đọc)
+  };
 
-    const handleLogout = () => {
-        setToken(null);
-        setAuth(null);
-        localStorage.removeItem("jwt");
-    };
+  const handleLogout = () => {
+    setToken(null);
+    setAuth(null);
+  };
 
-    return (
-        <ConfigProvider theme={{
-            algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-        }}>
-            {!token ?
-                <LoginPage onLogin={onLogin} />
-                :
-                <LicenseAdmin onLogout={handleLogout} dark={dark} setDark={setDark} />
-            }
-        </ConfigProvider>
-    );
+  return (
+    <ConfigProvider theme={{ algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm }}>
+      {!token ? (
+        <LoginPage onLogin={onLogin} />
+      ) : (
+        <LicenseAdmin onLogout={handleLogout} dark={dark} setDark={setDark} />
+      )}
+    </ConfigProvider>
+  );
 }
-
 export default App;
